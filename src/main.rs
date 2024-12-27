@@ -23,6 +23,15 @@ fn shell_loop() {
 fn handle_command(command: &str) {
     match command {
         "exit 0" => exit(0),
-        _ => println!("{}: command not found", command),
+        _ => {
+            let split_command = command.split(" ").collect::<Vec<&str>>();
+            let cmd = split_command[0];
+            if cmd == "echo" {
+                println!("{}", split_command[1..split_command.len()].join(" "));
+                io::stdout().flush().unwrap();
+            } else {
+                println!("{}: command not found", command)
+            }
+        }
     }
 }
