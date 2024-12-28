@@ -11,7 +11,14 @@ pub fn handle_type(command: &str) {
         println!("{} is a shell builtin", command);
         io::stdout().flush().unwrap();
     } else {
-        println!("{}: not found", command);
-        io::stdout().flush().unwrap();
+        let path_env = std::env::var("PATH").unwrap();
+        let split = &mut path_env.split(":");
+        if let Some(path) =
+            split.find(|path| std::fs::metadata(format!("{}/{}", path, command)).is_ok())
+        {
+            println!("{} is {}/{}", command, path, command);
+        } else {
+            println!("{} not found", command);
+        }
     }
 }
